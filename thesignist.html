@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="styles.css">
+	<meta charset="UTF-8">
+</head>
+<body>
+
+<div id="leftDiv">
+	<div id="resourcesDiv">
+		<p>
+		Time: <span id="gameTimeDisp"></span><br>
+		Money: $<span id="moneyDisp"></span>
+		</p>
+	</div>
+	<div id="occupationDiv">
+		<p>You work for <span id="storeName"></span></p>
+		<p>You are a sign person.</p>
+		<p>
+		You are holding <span id="signPrefix">a</span> sign that says:<br>
+		<span id="signMessage">Nothing.</span>
+		</p>
+		<p>Your sign is <span id="signPopularity">0</span>% popular.</p>
+		<button id="signActionButton" onclick="signAction()">Wave the sign around</button>
+		<p><span id="signChange">A passerby gives you </span><span id="signChangeDisp"></span>.</p>
+	</div>
+	<div id="statusesDiv">
+		<p>Statuses:</p>
+		<ul id="statusList">
+			<li id="onFire">On Fire!</li>
+		</ul>
+	</div>
+</div>
+
+<div id="middleDiv">
+	<div id="taxesDiv">
+		<button id="taxesButton" onclick="payTaxes(taxAmount)">Pay Taxes</button> <span id="moneyPrefix"> $</span><span id="taxesAmount"></span><br>
+		<span>Taxes Paid: <span id="moneyPrefix"> $</span><span id="taxesPaidDisp"></span>
+	</div>
+	<div id="inventoryDiv">
+		<p>You have a lit match.</p>
+		<button id="fireButton" onclick="pressed()">Set yourself on fire.</button>
+		<p>You have a fire extinguisher.</p>
+		<button id="extinguishButton" onclick="pressed2()">Put a fire out.</button>
+	</div>
+	<div id="signDiv">
+		<p>Write a message on the sign:</p>
+		<input type="text" id="signInput"> <button id="signInputButton" onclick="writeSign()">Write</button><br>
+		<br>
+		<span id="ink">Marker Ink:</span>
+		<span id="inkDisp">██████████</span><br>
+		<button id="buyInkButton" onclick="buyInk(inkAmount)">Buy Ink</button> <span id="moneyPrefix"> $</span><span id="inkCost"></span>
+	</div>
+</div>
+
+<div id="rightDiv">
+	<div id="govtDiv">
+		<p>Government!</p>
+		<p>Government Coffers: <span id="moneyPrefix"> $</span><span id="govtMoneyDisp"></span></p>
+	</div>
+	<div id="debugDiv">
+		<button id="refreshResourcesButton" onclick="dispUpdate()">Refresh Resources</button><br>
+		<span>Time Elapsed: <span id="timerDisp"></span> seconds</span>
+	</div>
+</div>
+
+<script src="main.js"></script>
+
+</body>
+</html>

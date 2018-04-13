@@ -1,0 +1,41 @@
+#leftDiv{
+	float: left;
+	width: 255px;
+}
+
+#middleDiv{
+	float: left;
+	width: 255px;
+	margin-left: 10px;
+}
+
+#rightDiv{
+	float: left;
+	width: 255px;
+	margin-left: 10px;
+}
+
+#occupationDiv{
+	margin-top: 3px;
+}
+
+#statusesDiv{
+	margin-top: 3px;
+}
+
+#signDiv{
+	margin-top: 3px;
+}
+
+#inventoryDiv{
+	margin-top: 3px;
+}
+
+#debugDiv{
+	margin-top: 3px;
+}
+
+div{
+	border: 1px solid black;
+	padding: 3px
+}
