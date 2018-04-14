@@ -1,4 +1,5 @@
 /**TODO
+* FINISH KEYWORDS
 * CHANGE CSS TO LOOK NICER
 * FINISH INCOME IMPLEMENTATION
 * FINISH TAX IMPLEMENTATION
@@ -8,7 +9,6 @@
 * BUILD SHOP
 * BUILD DAY/NIGHT CYCLE
 * BUILD SIGN TRICKS
-* BUILD SIGN EFFECTIVENESS
 * BUILD EXPLORATION WITH RANDOM OUTCOMES
 * BUILD WEATHER
 * DETAIL TO SIGN
@@ -93,6 +93,7 @@ var dispMoneyVal = 0;
 var hourlyIncome = 0;
 var baseIncome = 1000;
 var popularityVal = 0;
+var keywordPopularityMod = 0;
 
 var signMessage = "";
 
@@ -150,7 +151,7 @@ function writeSign(){
 }
 
 function signAction(){
-	var money = Math.floor(Math.random() * popularityVal) + Math.floor(Math.random() * 0.5 * ;
+	var money = Math.floor(Math.random() * popularityVal);// + Math.floor((Math.random() + 0.5) * (baseIncome / 2)) + 1;
 	moneyVal += money;
 	
 	var particleWord = "A";
@@ -197,9 +198,21 @@ function taxUpdate(){
 }
 
 function signUpdate(){
-	for(i = 0; i < signKeywords1.length; i++){
+	var hit = false;
+	
+	keywordPopularityMod = 0;
+	
+	for(j = 0; j < signKeywords1.length; j++){
+		var re = new RegExp(signKeywords1[j], "i");
+		hit = false;
+		hit = re.test(signMessage);
 		
+		if(hit == true){
+			keywordPopularityMod += 5;
+		}
 	}
+	
+	popularityVal = keywordPopularityMod;
 }
 
 function dispUpdate(){
@@ -245,7 +258,7 @@ function payTaxes(amount){
 		taxVal += amount;
 		govtMoneyVal += amount;
 	} else {
-		
+		//ERROR MESSAGE
 	}
 }
 
@@ -364,4 +377,5 @@ window.setInterval(function(){
 	taxUpdate();
 	flagUpdate();
 	dispUpdate();
+	signUpdate();
 }, 10);
