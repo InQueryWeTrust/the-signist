@@ -1,5 +1,5 @@
 /**TODO
-* FINISH KEYWORDS
+* WRITE MORE KEYWORDS
 * CHANGE CSS TO LOOK NICER
 * FINISH INCOME IMPLEMENTATION
 * FINISH TAX IMPLEMENTATION
@@ -45,6 +45,8 @@ function cacheDOMElements(){
 	govtDivElement = document.getElementById("govtDiv");
 	govtMoneyDispElement = document.getElementById("govtMoneyDisp");
 	
+	regexDispElement = document.getElementById("regexDisp");
+	
 	signInputElement = document.getElementById("signInput");
 	signInputButtonElement = document.getElementById("signInputButton");
 	inkDispElement = document.getElementById("inkDisp");
@@ -73,6 +75,8 @@ var taxesPaidDispElement;
 var govtDivElement;
 var govtMoneyDispElement;
 
+var regexDispElement;
+
 var signInputElement;
 var signInputButtonElement;
 var inkDispElement;
@@ -93,9 +97,11 @@ var dispMoneyVal = 0;
 var hourlyIncome = 0;
 var baseIncome = 1000;
 var popularityVal = 0;
-var keywordPopularityMod = 0;
+var keywordPopularity = 0;
 
 var signMessage = "";
+var storeTitle = [];
+var fullStoreTitle = "";
 
 var inkVal = 100;
 var inkVis = "";
@@ -119,9 +125,17 @@ var storeTitles = ["Store","Shoppe","Palace","Parlor","Empire","Land","Hut","Bui
 var personPrefix = ["old","young","large","happy","rich","poor","depressed","deaf","blind","foreign"];
 var personType = ["lady","dude","man","bro","girl","scientist","homeowner","woman","friend","relative","teacher","alien","superhero"];
 
-var signKeywords1 = ["buy","sell","here"];
-var signKeywords2 = ["best","value","quality"];
-var signKeywords3 = ["purchase","deal","variety"];
+var signKeywords = [
+	["buy","sell","here"],
+	["best","value","quality"],
+	["purchase","deal","variety"],
+	["Bye Bye Bye", "I Want You Back", "It's Gonna Be Me", "This I Promise You", "Thinking of You", "Girlfriend", "NSYNC"],
+	["fuck","shit","dick","piss","cunt","cock","penis","phallic unit","damn"],
+	["Christmas","Easter","Hanukkah","Thanksgiving","April Fool","Arbor","Kwanzaa","New Year","Halloween"]
+];
+var signKeywordFlags = [true, false, false, true, true, false];
+
+var keywords = [];
 
 //BUTTON HANDLING
 function pressed(){
@@ -151,7 +165,7 @@ function writeSign(){
 }
 
 function signAction(){
-	var money = Math.floor(Math.random() * popularityVal);// + Math.floor((Math.random() + 0.5) * (baseIncome / 2)) + 1;
+	var money = Math.floor(Math.random() * popularityVal + (Math.random() + 0.5) * (hourlyIncome / 10)) + 1;
 	moneyVal += money;
 	
 	var particleWord = "A";
@@ -176,7 +190,7 @@ function timerUpdate(){
 }
 
 function moneyUpdate(){
-	hourlyIncome = divide(baseIncome, popularityVal);
+	hourlyIncome = Math.floor(baseIncome * popularityVal / 100);
 	moneyVal += Math.round(hourlyIncome / 6);
 }
 
@@ -188,31 +202,65 @@ function flagUpdate(){
 	}
 }
 
+function keywordsUpdate(){
+	var tempKeywords = [];
+	for(i = 0; i < signKeywordFlags.length; i++){
+		if(signKeywordFlags[i] == true){
+			for(j = 0; j < signKeywords[i].length; j++){
+				tempKeywords.push(signKeywords[i][j]);
+			}
+		}
+	}
+	tempKeywords.push(storeTitle[1]);
+	keywords = tempKeywords;
+	
+	var string = "";
+	for(i = 0; i < keywords; i++){
+		string += keywords[i]; 
+	}
+	regexDispElement.innerHTML = string;
+}
+
 function taxUpdate(){
 	if(taxVal >= govtAmount){
 		govtFlag = 1;
 	}
 	taxesAmountElement.innerHTML = numberMuncher(taxAmount, 2);
 	taxesPaidDispElement.innerHTML = numberMuncher(taxVal, 2);
-	taxAmount = Math.floor(hourlyIncome / 5);
+	taxAmount = hourlyIncome;
 }
 
 function signUpdate(){
-	var hit = false;
-	
-	keywordPopularityMod = 0;
-	
-	for(j = 0; j < signKeywords1.length; j++){
-		var re = new RegExp(signKeywords1[j], "i");
-		hit = false;
-		hit = re.test(signMessage);
-		
-		if(hit == true){
-			keywordPopularityMod += 5;
+	//THE LEGEND OF THE BAD CODE
+	/*for(i = 0; i < signKeywordFlags.length; i++){
+		if(signKeywordFlags[i] == true){
+			for(j = 0; j < signKeywords[i].length; j++){
+				keywords.push(signKeywords[i][j]);
+			}
 		}
 	}
 	
-	popularityVal = keywordPopularityMod;
+	keywords.push(storeTitle[1]);*/
+	
+	//var index = 0;
+	var t = -1;
+	//var re = new RegExp(keywords[index], "i");
+	keywordPopularity = 0;
+	var tempMessage = signMessage.toLowerCase();
+	
+	for(i = 0; i < keywords.length; i++){
+		//index = j;
+		//t = re.test(signMessage);
+		
+		t = tempMessage.search(keywords[i].toLowerCase());
+		
+		//regexDispElement.innerHTML = keywords[j];
+		if(t != -1){
+			keywordPopularity = keywordPopularity + 3;
+		}
+	}
+	
+	popularityVal = keywordPopularity;
 }
 
 function dispUpdate(){
@@ -337,6 +385,11 @@ function changeMuncher(number, precision){
 			}
 			statement = "$" + integer + "." + decimal;
 		}
+	}else{
+		if(decimal < 10){
+			decimal = "0" + decimal;
+		}
+		statement = "$" + integer + "." + decimal;
 	}
 	
 	return statement;
@@ -349,11 +402,19 @@ function personGenerator(){
 	return [personPrefix[prefix],personType[type]];
 }
 
+function storeGenerator(){
+	var name = Math.floor(Math.random() * storeNames.length);
+	var item = Math.floor(Math.random() * storeItems.length);
+	var title = Math.floor(Math.random() * storeTitles.length);
+	
+	return [storeNames[name],storeItems[item],storeTitles[title]];
+}
+
 function divide(numerator, denominator){
 	var value = 0;
 	
 	if(denominator != 0){
-		value = numerator / denominator;
+		value = Math.floor(numerator / denominator);
 	}
 	
 	return value;
@@ -363,8 +424,11 @@ function divide(numerator, denominator){
 timerDispElement.innerHTML = timerVal;
 moneyDispElement.innerHTML = numberMuncher(moneyVal, 2);
 
-var fullStoreTitle = storeNames[Math.floor(Math.random() * storeNames.length)] + " " + storeItems[Math.floor(Math.random() * storeItems.length)] + " " + storeTitles[Math.floor(Math.random() * storeTitles.length)] + ".";
+storeTitle = storeGenerator();
+fullStoreTitle = storeTitle[0] + " " + storeTitle[1] + " " + storeTitle[2] + ".";
 storeNameElement.innerHTML = fullStoreTitle;
+
+keywordsUpdate();
 
 //PARENT UPDATE FUNCTION (SLOW)
 window.setInterval(function(){
