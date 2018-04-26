@@ -6,7 +6,7 @@ An ambitious button-pressing web game born as an excuse to learn HTML, CSS and J
 
 TODO:
 
-Fix code so the JavaScript actually runs
+WRITE MORE KEYWORDS
 
 CHANGE CSS TO LOOK NICER
 
